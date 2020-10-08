@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class File extends Model
+{
+    protected $table = "files";
+
+    protected $fillable = ['path', 'ticket_id'];
+
+    protected $hidden = ['id', 'ticket_id', 'created_at', 'updated_at'];
+}
