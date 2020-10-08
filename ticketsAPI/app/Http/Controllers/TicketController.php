@@ -17,11 +17,16 @@ class TicketController extends Controller
         if($order == 'desc' or $order == 'asc'){
             return response()->json(DB::table('tickets')
                 ->join('files', function($join) {
-                    $join->on('files.id', '=', DB::raw('(SELECT id FROM files
-                    WHERE ticket_id = tickets.id ORDER BY created_at DESC LIMIT 1)'));
+                    $join->on('files.id', '=',
+                    DB::raw('(SELECT id FROM files
+                    WHERE ticket_id = tickets.id
+                    ORDER BY created_at DESC
+                    LIMIT 1)'));
                 })
-            ->select('tickets.created_at', 'tickets.title', 'tickets.author_tel', 'tickets.status', 'files.path as file')
-            ->orderBy('created_at', $order)->simplePaginate(10), 200);
+                ->select('tickets.created_at', 'tickets.title', 'tickets.author_tel', 'tickets.status', 'files.path as file')
+                ->orderBy('created_at', $order)
+                ->simplePaginate(10),
+                200);
         } else {
             return response()->json(['Error' => 'Wrong order'], 400);
         }
@@ -38,12 +43,12 @@ class TicketController extends Controller
                 if($status->status == 'open'){
                    $ticket = $ticket->makeHidden('updated_at');
                 }
-                return response()->json($ticket);
+                return response()->json($ticket, 200);
             }
             else {
                 return response()->json(Ticket::where('id', $id)
                 ->select('title', 'created_at', 'status', 'text', 'author_tel')
-                ->get());
+                ->get(), 200);
             }
         } else {
             return response()->json(['Error' => 'Not found'], 404);
